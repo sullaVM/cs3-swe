@@ -1,2 +1,5 @@
 # cs3-swe
-TCD Computer Science CS3012 Software Engineering repository
+TCD Computer Science CS3012 Software Engineering repository.
+
+## Owner
+Sulla Montes
