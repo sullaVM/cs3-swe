@@ -14,17 +14,15 @@ func insert(root *node, val int) *node {
 			val: val,
 		}
 	}
+
 	if val > root.val {
 		x := insert(root.right, val)
 		root.right = x
 	} else if val < root.val {
 		x := insert(root.left, val)
 		root.left = x
-	} else {
-		// If value is equal to root value, return root.
-		return root
 	}
-	return nil
+	return root
 }
 
 func get(root *node, val int) *node {
