@@ -47,6 +47,7 @@ func lowestCommonAncestor(root, p, q *node) *node {
 	if root == nil || p == nil || q == nil {
 		return nil
 	}
+
 	if root.left == nil && root.right == nil {
 		if isAncestor(root, p) && isAncestor(root, q) {
 			return root
@@ -57,6 +58,12 @@ func lowestCommonAncestor(root, p, q *node) *node {
 	if root.left != nil {
 		if isAncestor(root.left, p) && isAncestor(root.left, q) {
 			return lowestCommonAncestor(root.left, p, q)
+		}
+	}
+
+	if root.right != nil {
+		if isAncestor(root.right, p) && isAncestor(root.right, q) {
+			return lowestCommonAncestor(root.right, p, q)
 		}
 	}
 
