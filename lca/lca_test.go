@@ -5,6 +5,16 @@ import (
 	"testing"
 )
 
+func TestNewTree(t *testing.T) {
+	want := &node{
+		val: 10,
+	}
+	got := newTree(10)
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf("expected %vg; got %v", want, got)
+	}
+}
+
 func TestLowestCommonAncestor(t *testing.T) {
 	// Create a binary tree to test.
 	//		 10
@@ -14,9 +24,7 @@ func TestLowestCommonAncestor(t *testing.T) {
 	// 3  9   16
 	//  \    /
 	//  4   15
-	root := &node{
-		val: 10,
-	}
+	root := newTree(10)
 	root = insert(root, 13)
 	root = insert(root, 6)
 	root = insert(root, 3)

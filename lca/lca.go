@@ -8,6 +8,12 @@ type node struct {
 	right *node
 }
 
+func newTree(val int) *node {
+	return &node{
+		val: val,
+	}
+}
+
 func insert(root *node, val int) *node {
 	if root == nil {
 		return &node{
