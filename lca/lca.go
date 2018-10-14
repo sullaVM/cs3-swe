@@ -18,6 +18,22 @@ import (
 type Digraph struct {
 	nodeCount int
 	edges     [][]bool
+	visited   []bool
+	min       int
+}
+
+// NewGraph returns a new digraph isntance.
+func NewGraph(n int) *Digraph {
+	ed := make([][]bool, n)
+	for i := range ed {
+		ed[i] = make([]bool, n)
+	}
+	return &Digraph{
+		nodeCount: n,
+		edges:     ed,
+		visited:   make([]bool, n),
+		min:       n,
+	}
 }
 
 // AddEdge adds an edge to a digraph.
@@ -50,8 +66,58 @@ func (g *Digraph) isInGraph(u, v int) error {
 	return nil
 }
 
-// LCA finds the lowest common ancestor of nodes n and m.
-func LCA(n, m int) (int, error) {
+// DFS finds the given node 'find' and counts the steps it took to get there.
+func (g *Digraph) DFS(i, find, steps int) int {
+	if find == i {
+		return steps
+	}
+	steps++
+	// Initialise tmpSteps to -1, to mean 'find' is not found.
+	tmpSteps := -1
+	for j := 0; j < g.nodeCount; j++ {
+		if !g.visited[j] && g.edges[i][j] {
+			tmpSteps = g.DFS(j, find, steps)
+			fmt.Printf("%v -> %v %v\n", i, j, tmpSteps)
+		}
+	}
+	if tmpSteps < g.min && tmpSteps != -1 {
+		g.min = tmpSteps
+	}
+	return tmpSteps
+}
 
+func min(arr []int) int {
+	min := arr[0]
+	for _, i := range arr {
+		if min > i {
+			min = i
+		}
+	}
+	return min
+}
+
+// LCA finds the lowest common ancestor of nodes n and m.
+func (g *Digraph) LCA(n, m int) (int, error) {
+	nodeDistanceTable := map[int]int{}
+	for i := 0; i < g.nodeCount; i++ {
+		g.resetMin()
+		g.DFS(i, n, 0)
+		// Set distance from i -> n.
+		nodeDistanceTable[i] = g.min
+		fmt.Printf("n min: %v\n", g.min)
+
+		g.resetMin()
+		g.DFS(i, m, 0)
+		// If the distance of i -> m is greater than
+		// i -> n, make this the 'real' distance from i -> n, m.
+		fmt.Printf("m min: %v\n\n", g.min)
+		if nodeDistanceTable[i] < g.min {
+			nodeDistanceTable[i] = g.min
+		}
+	}
 	return 0, nil
+}
+
+func (g *Digraph) resetMin() {
+	g.min = g.nodeCount
 }
