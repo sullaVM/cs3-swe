@@ -67,4 +67,28 @@ func TestLCA(t *testing.T) {
 		t.Errorf("LCA failed; got: %v; want: %v", got, want)
 	}
 
+	// Case 5:
+	// The LCA when the distance from the LCA to node u is less than
+	// the distance from the LCA to node v.
+	got, err = g.LCA(5, 7)
+	want = 3
+	if err != nil {
+		fmt.Print(err)
+	}
+	if want != got {
+		t.Errorf("LCA failed; got: %v; want: %v", got, want)
+	}
+
+	// Case 6:
+	// The LCA when there is 2 nodes that are both LCA of nodes u and v.
+	got, err = g.LCA(6, 1)
+	want1 := 0
+	want2 := 1
+	if err != nil {
+		fmt.Print(err)
+	}
+	if want1 != got && want2 != got {
+		t.Errorf("LCA failed; got: %v; want: %v", got, want)
+	}
+
 }

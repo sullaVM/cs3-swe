@@ -5,6 +5,8 @@ import (
 	"fmt"
 )
 
+const invalid = -1
+
 // Digraph is a directed graph represented by an adjacency matrix, e.g.:
 // A digraph with 5 nodes, with node u as rows and node v as columns, and
 // [u][v] = T is an edge from u -> v.
@@ -77,14 +79,14 @@ func (g *Digraph) DFS(i, find, steps int) int {
 	}
 	steps++
 	// Initialise tmpSteps to -1, to mean 'find' is not found.
-	tmpSteps := -1
+	tmpSteps := invalid
 	for j := 0; j < g.nodeCount; j++ {
 		if !g.visited[j] && g.edges[i][j] {
 			tmpSteps = g.DFS(j, find, steps)
 			fmt.Printf("%v -> %v %v\n", i, j, tmpSteps)
 		}
 	}
-	if tmpSteps < g.min && tmpSteps != -1 {
+	if tmpSteps < g.min && tmpSteps != invalid {
 		g.min = tmpSteps
 	}
 	return tmpSteps
@@ -108,35 +110,39 @@ func (g *Digraph) LCA(n, m int) (int, error) {
 		return 0, nil
 	}
 
+	// invalidMin value that a g.min can have.
+	// a graph with n nodes can only have n * 2 edges at most.
+	invalidMin := (g.nodeCount * 2) + 1
+
 	nodeDistanceTable := map[int]int{}
 	for i := 0; i < g.nodeCount; i++ {
-		g.resetMin()
+		g.resetMin(invalidMin)
 		g.DFS(i, n, 0)
 		// Set distance from i -> n.
 		// If there is no path from i -> n, don't add this to the distance table.
-		if g.min == g.nodeCount {
+		if g.min == invalidMin {
 			continue
 		}
 		nodeDistanceTable[i] = g.min
 		fmt.Printf("n min: %v\n", g.min)
 
-		g.resetMin()
+		g.resetMin(invalidMin)
 		g.DFS(i, m, 0)
 		// If the distance of i -> m is greater than
 		// i -> n, make this the 'real' distance from i -> n, m.
 		fmt.Printf("m min: %v\n\n", g.min)
-		if nodeDistanceTable[i] < g.min && g.min != g.nodeCount {
+		if nodeDistanceTable[i] < g.min && g.min != invalidMin {
 			nodeDistanceTable[i] = g.min
 		}
 		// If there is no path from i -> m, then make the min path -1.
-		if g.min == g.nodeCount {
+		if g.min == invalidMin {
 			delete(nodeDistanceTable, i)
 		}
 	}
 
 	// Set the min to the maximum amount of directed edges graph g can have.
 	min := g.nodeCount * 2
-	minNode := -1
+	minNode := invalid
 	for k, v := range nodeDistanceTable {
 		// If v < 0, then v is either 0 where the node is pointing
 		// to itself or -1 where the there means the given node k is
@@ -149,12 +155,12 @@ func (g *Digraph) LCA(n, m int) (int, error) {
 	}
 	fmt.Print("\n---- \n")
 
-	if minNode == -1 {
+	if minNode == invalid {
 		return -1, fmt.Errorf("no common ancestor for %v and %v", n, m)
 	}
 
 	return minNode, nil
 }
-func (g *Digraph) resetMin() {
-	g.min = g.nodeCount
+func (g *Digraph) resetMin(invalidMin int) {
+	g.min = invalidMin
 }
