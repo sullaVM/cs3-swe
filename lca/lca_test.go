@@ -21,10 +21,50 @@ func TestLCA(t *testing.T) {
 	g.AddEdge(8, 9)
 	g.AddEdge(9, 6)
 
-	lca, err := g.LCA(6, 8)
+	// Case 1:
+	// The LCA is directly a step away from both.
+	got, err := g.LCA(4, 7)
+	want := 3
 	if err != nil {
-		fmt.Errorf("%v", err)
+		fmt.Print(err)
 	}
-	fmt.Printf("%v \n", lca)
+	if want != got {
+		t.Errorf("LCA failed; got: %v; want: %v", got, want)
+	}
+
+	// Case 2:
+	// The LCA of nodes u and v is u itself and there are multiple
+	// other common ancestors of the 2.
+	got, err = g.LCA(6, 8)
+	want = 8
+	if err != nil {
+		fmt.Print(err)
+	}
+	if want != got {
+		t.Errorf("LCA failed; got: %v; want: %v", got, want)
+	}
+
+	// Case 3:
+	// The LCA of nodes u and v is itself if u == v.
+	got, err = g.LCA(0, 0)
+	want = 0
+	if err != nil {
+		fmt.Print(err)
+	}
+	if want != got {
+		t.Errorf("LCA failed; got: %v; want: %v", got, want)
+	}
+
+	// Case 4:
+	// When there is no LCA for nodes u and v, it should return -1 and an error.
+	g.RemoveEdge(7, 8)
+	got, err = g.LCA(8, 5)
+	want = -1
+	if err != nil {
+		fmt.Print(err)
+	}
+	if want != got {
+		t.Errorf("LCA failed; got: %v; want: %v", got, want)
+	}
 
 }
