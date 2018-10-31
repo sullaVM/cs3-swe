@@ -5,6 +5,42 @@ import (
 	"testing"
 )
 
+func TestAddEdge(t *testing.T) {
+	g := NewGraph(3)
+
+	err := g.AddEdge(0, 5)
+	if err == nil {
+		t.Error("removing non-existent edge failed")
+	}
+
+	err = g.AddEdge(0, 1)
+	if err != nil {
+		t.Error("removing non-existent edge failed")
+	}
+
+}
+
+func TestRemoveEdge(t *testing.T) {
+	g := NewGraph(3)
+	g.AddEdge(0, 1)
+	g.AddEdge(0, 2)
+
+	err := g.RemoveEdge(5, 4)
+	if err == nil {
+		t.Error("removing non-existent edge failed")
+	}
+
+	err = g.RemoveEdge(1, 4)
+	if err == nil {
+		t.Error("removing non-existent edge failed")
+	}
+
+	err = g.RemoveEdge(0, 1)
+	if err != nil {
+		t.Error("removing non-existent edge failed")
+	}
+}
+
 func TestLCA(t *testing.T) {
 	// Development test DFS
 	g := NewGraph(10)
@@ -90,5 +126,4 @@ func TestLCA(t *testing.T) {
 	if want1 != got && want2 != got {
 		t.Errorf("LCA failed; got: %v; want: %v", got, want)
 	}
-
 }

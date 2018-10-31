@@ -86,20 +86,7 @@ func (g *Digraph) DFS(i, find, steps int) int {
 			fmt.Printf("%v -> %v %v\n", i, j, tmpSteps)
 		}
 	}
-	if tmpSteps < g.min && tmpSteps != invalid {
-		g.min = tmpSteps
-	}
 	return tmpSteps
-}
-
-func min(arr []int) int {
-	min := arr[0]
-	for _, i := range arr {
-		if min > i {
-			min = i
-		}
-	}
-	return min
 }
 
 // LCA finds the lowest common ancestor of nodes n and m.
